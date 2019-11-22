@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'models/SettingsHandler.dart';
+import 'screens/demo_screen.dart';
 import 'screens/info_screen.dart';
 import 'screens/menu_screen.dart';
 import 'screens/play_screen.dart';
-import 'utils/global_audio_player.dart';
+import 'screens/settings_screen.dart';
 import 'screens/difficulty_screen.dart';
+import 'models/SettingsHandler.dart';
+import 'utils/global_audio_player.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setEnabledSystemUIOverlays([]);
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
@@ -17,11 +21,6 @@ void main() async {
   final settings = await SettingsHandler.getInstance();
   runApp(MyApp(settings));
 }
-
-// class MyApp extends StatefulWidget {
-//   @override
-//   DemoScreen createState() => DemoScreen();
-// }
 
 class MyApp extends StatelessWidget {
   final SettingsHandler settings;
@@ -44,6 +43,8 @@ class MyApp extends StatelessWidget {
           DifficultyScreen.routeName: (context) => DifficultyScreen(),
           PlayScreen.routeName: (context) => PlayScreen(ModalRoute.of(context).settings.arguments),
           InfoScreen.routeName: (context) => InfoScreen(),
+          SettingsScreen.routeName: (context) => SettingsScreen(),
+          DemoScreen.routeName: (context) => DemoScreen(),
         },
       ),
     );

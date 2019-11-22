@@ -11,14 +11,23 @@ import 'package:flaguru/models/ProfileProvider.dart';
 
 class InfoScreen extends StatefulWidget {
   static String routeName = "/info_screen";
+
   @override
   _InfoScreenState createState() => _InfoScreenState();
 }
 
 class _InfoScreenState extends State<InfoScreen> {
   RoundDetails easyDetails;
+<<<<<<< HEAD
   RoundDetails normalDetails;
   RoundDetails hardDetails;
+=======
+
+  RoundDetails normalDetails;
+
+  RoundDetails hardDetails;
+
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
   String totalScore;
 
   //pro
@@ -28,8 +37,12 @@ class _InfoScreenState extends State<InfoScreen> {
   //get score
   Future _getScore() async {
     this.easyDetails = await ProfileProvider().getLocalResult(Difficulty.EASY);
+<<<<<<< HEAD
     this.normalDetails =
         await ProfileProvider().getLocalResult(Difficulty.NORMAL);
+=======
+    this.normalDetails = await ProfileProvider().getLocalResult(Difficulty.NORMAL);
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
     this.hardDetails = await ProfileProvider().getLocalResult(Difficulty.HARD);
     this.totalScore = await LocalStorage().getTotalScore();
   }
@@ -42,24 +55,24 @@ class _InfoScreenState extends State<InfoScreen> {
     this.auth.getCurrentUser().then((user) {
       setState(() {
         this._currentUser = user;
-        this._currentUser.email =
-            user.email[0].toUpperCase() + user.email.substring(1);
+        this._currentUser.email = user.email[0].toUpperCase() + user.email.substring(1);
       });
     });
   }
+
   //meth
-  void signout(BuildContext context) {
+  void signOut(BuildContext context) {
     // Navigator.pushNamed(context, MenuScreen.routeName);
     // Navigator.pop(context);
     this.auth.signOut().then((_) {}).catchError((err) => print(err));
-    Navigator.popAndPushNamed(context, MenuScreen.routeName);
+    backMenuScreen();
   }
 
   void backMenuScreen() {
-    Navigator.popAndPushNamed(context, MenuScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(MenuScreen.routeName);
   }
 
-  void switchuser() {
+  void switchUser() {
     this.auth.switchUser().then((_) {
       return this.auth.getCurrentUser();
     }).then((user) {
@@ -102,7 +115,7 @@ class _InfoScreenState extends State<InfoScreen> {
                         ),
                       ),
                       Align(
-                        alignment: Alignment(0, 1),
+                        alignment: Alignment(0, 1.2),
                         child: Container(
                           //margin: EdgeInsets.only(top: 50),
                           height: _height * 0.1709,
@@ -110,6 +123,7 @@ class _InfoScreenState extends State<InfoScreen> {
                             children: <Widget>[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
+<<<<<<< HEAD
                                 child: Hero(
                                   tag: 'avatar',
                                   child: Image.network(
@@ -119,6 +133,14 @@ class _InfoScreenState extends State<InfoScreen> {
                                     repeat: ImageRepeat.noRepeat,
                                     fit: BoxFit.cover,
                                   ),
+=======
+                                child: Image.network(
+                                  this._currentUser.avatar,
+                                  height: _height * 0.10,
+                                  width: _height * 0.10,
+                                  repeat: ImageRepeat.noRepeat,
+                                  fit: BoxFit.cover,
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
                                 ),
                               ),
                               SizedBox(
@@ -127,8 +149,7 @@ class _InfoScreenState extends State<InfoScreen> {
                               Text(
                                 _currentUser.name,
                                 style: TextStyle(
-                                    fontSize: _height * 0.0273,
-                                    fontWeight: FontWeight.w700),
+                                    fontSize: _height * 0.0273, fontWeight: FontWeight.w700),
                               )
                             ],
                           ),
@@ -154,32 +175,34 @@ class _InfoScreenState extends State<InfoScreen> {
                         this.easyDetails.playedCount.toString(),
                         this.easyDetails.highestScore.toString(),
                         this.easyDetails.winningCount.toString(),
-                        _height),
+                        _height,
+                        _width),
                     SizedBox(height: _height * 0.04),
                     getScroreUserCard(
                         'Medium',
                         this.normalDetails.playedCount.toString(),
                         this.normalDetails.highestScore.toString(),
                         this.normalDetails.winningCount.toString(),
-                        _height),
+                        _height,
+                        _width),
                     SizedBox(height: _height * 0.04),
                     getScroreUserCard(
                         'Hard',
                         this.hardDetails.winningCount.toString(),
                         this.hardDetails.winningCount.toString(),
                         this.hardDetails.winningCount.toString(),
-                        _height),
-                    SizedBox(height: _height * 0.04),
-                    getScroreUserCard(
-                        'Enless',
-                        this.easyDetails.playedCount.toString(),
-                        this.easyDetails.highestScore.toString(),
-                        this.easyDetails.winningCount.toString(),
-                        _height),
+                        _height,
+                        _width),
+                    // SizedBox(height: _height * 0.04),
+                    // getScroreUserCard(
+                    //     'Enless',
+                    //     this.easyDetails.playedCount.toString(),
+                    //     this.easyDetails.highestScore.toString(),
+                    //     this.easyDetails.winningCount.toString(),
+                    //     _height,
+                    //     _width),
                     ButtonSwitchButtonLogout(
-                        signout: signout,
-                        switchuser: switchuser,
-                        paramcontext: context),
+                        signout: signOut, switchuser: switchUser, paramcontext: context),
                   ],
                 ),
               ),
@@ -199,6 +222,7 @@ class _InfoScreenState extends State<InfoScreen> {
       return Color.fromRGBO(255, 193, 0, 1);
     else
       return Color.fromRGBO(56, 187, 231, 1);
+<<<<<<< HEAD
   }
 
   Widget getTotalScore(double _height) {
@@ -210,16 +234,39 @@ class _InfoScreenState extends State<InfoScreen> {
             height: (_height * 0.067),
             width: (_height * 0.067),
           ),
+=======
+  }
+  
+  int sumTotalScore()
+  {
+    int total;
+    total = easyDetails.highestScore + hardDetails.highestScore + normalDetails.highestScore;
+    return total;
+  }
+
+  Widget getTotalScore( double _height) {
+    print(this.totalScore);
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Image.asset('assets/infoscreen_icon/award.png', height: (_height * 0.063), width: (_height * 0.063),),
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
           Text(
             'Total Score: ',
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 23,
               fontWeight: FontWeight.w700,
             ),
           ),
           Text(
+<<<<<<< HEAD
             this.totalScore == null ? '0' : this.totalScore,
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+=======
+            //this.totalScore == null ? '0': this.totalScore,
+            sumTotalScore().toString(),
+            style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
           )
         ],
       ),
@@ -250,8 +297,7 @@ class _InfoScreenState extends State<InfoScreen> {
             child: Container(
               child: Text(
                 score,
-                style: TextStyle(
-                    fontSize: _height * 0.039, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: _height * 0.039, fontWeight: FontWeight.w700),
               ),
             ),
           ),
@@ -279,8 +325,7 @@ class _InfoScreenState extends State<InfoScreen> {
           ),
           Text(
             score,
-            style: TextStyle(
-                fontSize: _height * 0.039, fontWeight: FontWeight.w700),
+            style: TextStyle(fontSize: _height * 0.039, fontWeight: FontWeight.w700),
           ),
           SizedBox(
             height: _height * 0.0023,
@@ -293,9 +338,14 @@ class _InfoScreenState extends State<InfoScreen> {
       ),
     ));
   }
+<<<<<<< HEAD
 
   Widget getScroreUserCard(String diff, String rounds, String highestScore,
       String wins, double _height) {
+=======
+   Widget getScroreUserCard(String diff, String rounds, String highestScore,
+      String wins, double _height, double _width) {
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
     return (Container(
       height: _height * 0.205,
       width: double.infinity,
@@ -320,6 +370,7 @@ class _InfoScreenState extends State<InfoScreen> {
         //crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           //name
+<<<<<<< HEAD
           Positioned(
             top: _height * 0.0269 * -1,
             left: 85,
@@ -336,10 +387,26 @@ class _InfoScreenState extends State<InfoScreen> {
                 diff,
                 style: TextStyle(
                     fontSize: _height * 0.031, fontWeight: FontWeight.w700),
+=======
+        Align(
+          alignment: Alignment(0, -1.4),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: getColodiff(diff)
+                ),
+                margin: EdgeInsets.only(top: 0, bottom: 6),
+                alignment: Alignment.center,
+                width: _width * 0.35,
+                height: 35,
+                child: Text(
+                  diff,
+                  style: TextStyle(
+                      fontSize: _height * 0.031, fontWeight: FontWeight.w700),
+                ),
+>>>>>>> 4a79d0f9eba9511d91a26a5416989347713fb3a6
               ),
             ),
-          ),
-
           //Text('EASY'),
           // score
           Padding(
