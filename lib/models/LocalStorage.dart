@@ -38,7 +38,8 @@ class LocalStorage {
       pref.setInt('${symbol}played', playCount + 1);
   }
 
-  static Future<void> saveResult(int newScore, Difficulty level, bool isWin) async {
+  static Future<void> saveResult(
+      int newScore, Difficulty level, bool isWin) async {
     var symbol = _getSymbol(level);
     var pref = await SharedPreferences.getInstance();
     var lastHighestScore = pref.getInt('${symbol}score');
@@ -49,7 +50,8 @@ class LocalStorage {
     if (winning == null)
       pref.setInt('${symbol}win', 0);
     else if (isWin) pref.setInt('${symbol}win', winning + 1);
-    pref.setInt('totalscore', totalScore == null ? totalScore : totalScore + newScore);
+    pref.setInt(
+        'totalscore', totalScore == null ? totalScore : totalScore + newScore);
   }
 
   static Future<RoundDetails> getLocalResult(Difficulty level) async {
