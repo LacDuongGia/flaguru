@@ -11,15 +11,6 @@ class Node {
   int _cursor = 0;
   var _rand = Random();
 
-  /*
-   * These function is for test only.
-   */
-  List<Country> testCountries() => this._countries;
-
-  int testRatio() => this._ratio;
-
-  int testCursor() => this._cursor;
-
   int get ratio => this._ratio;
 
   Node(Country country) {
@@ -60,7 +51,7 @@ class Node {
       return null;
     }
     var selectedQuestion = _countries[_cursor].toQuestion();
-    _countries[_cursor].chances = 5;
+    _countries[_cursor].chances = 10;
     queue[_countries[_cursor].id] = _countries[_cursor].chances;
     _updateChancesInDatabase(queue);
     _cursor++;

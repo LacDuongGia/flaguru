@@ -52,4 +52,11 @@ class User {
 
   @override
   String toString() => 'User $uuid, name $name, email $email';
+
+  Map<String, Object> toJSON() => {
+        "uuid": this.uuid,
+        "name": this._name,
+        "email": this._email,
+        "avatar": this._avatar,
+      };
 }

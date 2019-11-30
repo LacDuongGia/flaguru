@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flaguru/models/Authenticator.dart';
 import 'package:flaguru/models/Enum.dart';
 import 'package:flaguru/models/RoundDetails.dart';
 import 'package:flaguru/models/Settings.dart';
@@ -57,14 +60,23 @@ class LocalStorage {
   static Future<RoundDetails> getLocalResult(Difficulty level) async {
     var symbol = _getSymbol(level);
     var pref = await SharedPreferences.getInstance();
-    var highestScore = pref.getInt('${symbol}score');
-    var playedCount = pref.getInt('${symbol}played');
-    var winningCount = pref.getInt('${symbol}win');
     return RoundDetails(
-        highestScore: highestScore,
-        winningCount: winningCount,
-        playedCount: playedCount,
+        highestScore: pref.getInt('${symbol}score'),
+        winningCount: pref.getInt('${symbol}win'),
+        playedCount: pref.getInt('${symbol}played'),
         level: level);
+  }
+
+  static Future<String> getUserData() async {
+    var currentUser = await Authentication().getCurrentUser();
+    return jsonEncode({
+      ...currentUser.toJSON(),
+      ...(await LocalStorage.getLocalResult(Difficulty.EASY)).toJSON("easy"),
+      ...(await LocalStorage.getLocalResult(Difficulty.NORMAL))
+          .toJSON("normal"),
+      ...(await LocalStorage.getLocalResult(Difficulty.HARD)).toJSON("hard"),
+      ...(await LocalStorage.getLocalResult(Difficulty.EASY)).toJSON("endless"),
+    });
   }
 
   static String _getSymbol(Difficulty level) {
@@ -82,8 +94,19 @@ class LocalStorage {
     }
   }
 
-  Future<String> getTotalScore() async {
-    var pref = await SharedPreferences.getInstance();
-    return pref.getInt('totalscore').toString();
+  Future<String> getTotalScore() async =>
+      (await SharedPreferences.getInstance()).getInt('totalscore').toString();
+
+  static Future<int> queryLastTimeUpdates() async =>
+      (await SharedPreferences.getInstance()).getInt('lasttimeupdate');
+
+  static Future<bool> updateLastTimeUpdate(int newTimestamp) async {
+    try {
+      (await SharedPreferences.getInstance())
+          .setInt('lasttimeupdate', newTimestamp);
+      return true;
+    } catch (Exception) {
+      return false;
+    }
   }
 }

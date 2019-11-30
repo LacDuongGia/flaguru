@@ -127,7 +127,6 @@ class RoundHandler {
   void generateQAs() {
     if (remainLives <= 0)
       throw Exception('There is no lives remain to generate new question.');
-    _generateAnswers(4);
     switch (_level) {
       case Difficulty.ENDLESS:
       case Difficulty.EASY:
@@ -142,6 +141,7 @@ class RoundHandler {
       default:
         throw Exception('Unknown difficulty');
     }
+    _generateAnswers(4);
     if (_isFirstAnswerAlwaysRight)
       answers[0] = question.toAnswer();
     else
@@ -162,7 +162,7 @@ class RoundHandler {
                 .getRandomAnswer();
         for (var answer in answers)
           if (answer.countryID == nominationAnswer.countryID) isDupicate = true;
-      } while (isDupicate);
+      } while (isDupicate || nominationAnswer.countryID == question.countryID);
       answers.add(nominationAnswer);
     }
   }
@@ -183,6 +183,8 @@ class RoundHandler {
       if (leftCursor < 0 && rightCursor > _lastIndex) {
         _isNormalCursorHeadLeft = true;
         _distanceFromNormalCursor = 0;
+        leftCursor = _normalCursor;
+        rightCursor = _normalCursor;
       }
       // case heading left.
       if (_isNormalCursorHeadLeft)
@@ -202,7 +204,11 @@ class RoundHandler {
 
   void _fetchRightFromNormalCursor(int rightCursor) {
     // if right side is still in range.
-    if (rightCursor <= _lastIndex) {
+    if (rightCursor <= _lastIndex && _distanceFromNormalCursor == 0) {
+      question = null;
+      _isNormalCursorHeadLeft = true;
+      _distanceFromNormalCursor++;
+    } else if (rightCursor <= _lastIndex) {
       question = _countriesChain[rightCursor].getQuestion();
       if (question == null) {
         _isNormalCursorHeadLeft = true;
@@ -267,7 +273,6 @@ class RoundHandler {
         remainLives: remainLives,
         totalLives: _lifeCount,
         answerLogs: _answerLogs);
-    // TODO check if network connection available before saveLog.
     var connection = Connection()
       ..sendReports(_answerLogs).then((status) {
         if (status)
@@ -280,17 +285,4 @@ class RoundHandler {
         .catchError((error) => print(error));
     return roundResult;
   }
-
-  String _nodeString() {
-    String message = '';
-    for (var node in _countriesChain) message += '${node.toString()}.\n';
-    return message;
-  }
-
-  @override
-  String toString() => '''
-      *** Node cursor at ${_countriesChain[_normalCursor].testCursor()}. ***
-      *** Cursor at node ${_countriesChain[_normalCursor].ratio}. ***
-${_nodeString()}
-''';
 }

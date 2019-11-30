@@ -13,11 +13,15 @@ class Country {
   Continent continent;
   int ratio;
   int _callCounter;
+
+  int get callCounter => _callCounter;
+
   int _correctCounter;
+
+  int get correctCounter => _correctCounter;
+
   String description;
   int chances = 0;
-  bool isAllow = true;
-  // int nodeAddress;
 
   Country(
       {@required this.id,
@@ -27,14 +31,12 @@ class Country {
       int callCounter: 0,
       int correctCounter: 0,
       this.continent,
-      this.isAllow,
       @required this.chances}) {
     _callCounter = callCounter;
     _correctCounter = correctCounter;
     ratio = callCounter == 0 && correctCounter == 0
         ? 0
         : (_correctCounter / _callCounter * 100).round();
-    // print('Country $name has new ratio $ratio');
   }
 
   Answer toAnswer() => Answer(
@@ -52,17 +54,4 @@ class Country {
   }
 
   void call() => chances = chances == 0 ? 2 : chances - 1;
-
-  int calculateNewRatio(bool isCorrect) {
-    _callCounter++;
-    if (isCorrect) _correctCounter++;
-    ratio = (_correctCounter / _callCounter * 100).round();
-    // print('Country $name has new ratio $ratio');
-    return ratio;
-  }
-
-  @override
-  String toString() => '''
-    $name -> ratio $ratio -> chance: $chances -> $isAllow.
-    ''';
 }

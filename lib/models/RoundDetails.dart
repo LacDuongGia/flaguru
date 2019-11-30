@@ -17,4 +17,18 @@ class RoundDetails {
     if (this.winningCount == null) this.winningCount = 0;
     if (this.playedCount == null) this.playedCount = 0;
   }
+
+  Map<String, Object> toJSON(String level) {
+    if (level == "endless") {
+      return {
+        "${level}Played": playedCount,
+        "${level}highestScore": highestScore,
+      };
+    }
+    return {
+      "${level}Played": playedCount,
+      "${level}Win": winningCount,
+      "${level}highestScore": highestScore,
+    };
+  }
 }
