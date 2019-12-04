@@ -6,6 +6,8 @@ import 'package:http/http.dart';
 import 'package:flaguru/models/Report.dart';
 import 'package:flaguru/models/UserDetail.dart';
 
+import 'LocalStorage.dart';
+
 class HttpProvider {
   final _reportURL =
       'https://us-central1-flaguru-35568.cloudfunctions.net/handleReport';
@@ -50,7 +52,9 @@ class HttpProvider {
   }
 
   Future<bool> updateUserLocal() async {
-    var response = await get(_userLocalURL);
+    if (LocalStorage.getUserData() == null) return false;
+    Map<String, String> headers = {"Content-type": "application/json"};
+    var response = await post(_userURL, headers: headers, body: LocalStorage.getUserData());
     return response.statusCode == 200;
   }
 }
